@@ -41,16 +41,52 @@ public class GridMap {
 		}
 		return newMap;
 	}
-	
-	private Tile[][] moveEntity(int enemyID, int[] pos, int[] newPos){
+
+	private Tile[][] moveEntity(int enemyID, int[] pos, int[] newPos) {
 		Tile[][] newMap = tileMap;
-		if(enemyID > 0 && enemyID < enemy.length && enemyID < enemyPos.length) {
-			if(newMap[newPos[0]][newPos[1]] == Tile.FLOOR) {
+		if (enemyID > 0 && enemyID < enemy.length && enemyID < enemyPos.length) {
+			if (newMap[newPos[0]][newPos[1]] == Tile.FLOOR) {
 				newMap[newPos[0]][newPos[1]] = Tile.ENEMY;
 				enemyPos[enemyID] = newPos;
 			}
 		}
 		return newMap;
+	}
+
+	private boolean isAdjacentClear(int posOne, int posTwo) {
+		Tile[][] newMap = tileMap;
+		if (tileMap[posOne + 1][posTwo] == Tile.ENEMY || tileMap[posOne - 1][posTwo] == Tile.ENEMY
+				|| tileMap[posOne][posTwo + 1] == Tile.ENEMY || tileMap[posOne][posTwo - 1] == Tile.ENEMY
+				|| tileMap[posOne + 1][posTwo + 1] == Tile.ENEMY || tileMap[posOne + 1][posTwo - 1] == Tile.ENEMY
+				|| tileMap[posOne - 1][posTwo + 1] == Tile.ENEMY || tileMap[posOne - 1][posTwo - 1] == Tile.ENEMY
+				|| tileMap[posOne + 1][posTwo] == Tile.PLAYER || tileMap[posOne - 1][posTwo] == Tile.PLAYER
+				|| tileMap[posOne][posTwo + 1] == Tile.PLAYER || tileMap[posOne][posTwo - 1] == Tile.PLAYER
+				|| tileMap[posOne + 1][posTwo + 1] == Tile.PLAYER || tileMap[posOne + 1][posTwo - 1] == Tile.PLAYER
+				|| tileMap[posOne - 1][posTwo + 1] == Tile.PLAYER || tileMap[posOne - 1][posTwo - 1] == Tile.PLAYER) {
+			return false;
+		} else {
+			return true;
+		}
+
+	}
+
+	private Tile[][] spawnEntityRandom(){
+		Tile[][] newMap = tileMap;
+		boolean goodSpawn = false;
+		do {
+			int posOne,posTwo;
+			posOne = rnd.nextInt(xSize);
+			posTwo = rnd.nextInt(ySize);
+			//if(newMap[posOne][posTwo] == Tile.FLOOR)
+			
+			
+			
+			
+		}while(!goodSpawn);
+		
+		
+		return newMap;
+		
 	}
 
 	private Tile[][] generateOuterWalls(Tile[][] tileMap) {
