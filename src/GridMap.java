@@ -41,6 +41,17 @@ public class GridMap {
 		}
 		return newMap;
 	}
+	
+	private Tile[][] moveEntity(int enemyID, int[] pos, int[] newPos){
+		Tile[][] newMap = tileMap;
+		if(enemyID > 0 && enemyID < enemy.length && enemyID < enemyPos.length) {
+			if(newMap[newPos[0]][newPos[1]] == Tile.FLOOR) {
+				newMap[newPos[0]][newPos[1]] = Tile.ENEMY;
+				enemyPos[enemyID] = newPos;
+			}
+		}
+		return newMap;
+	}
 
 	private Tile[][] generateOuterWalls(Tile[][] tileMap) {
 		if (tileMap.length <= 2 || tileMap[0].length <= 2) {
