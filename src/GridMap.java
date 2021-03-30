@@ -55,6 +55,7 @@ public class GridMap {
 				enemyPos[enemyID] = newPos;
 			}
 		}
+		this.tileMap = newMap;
 		return newMap;
 	}
 
