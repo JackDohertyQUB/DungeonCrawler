@@ -26,11 +26,14 @@ public class GridMap {
 		this.ySize = ySize;
 		tileMap = generateOuterWalls(generateBlankTileMap(xSize, ySize));
 		this.player = Player;
+		tileMap = spawnPlayer();
 
-		enemyCount = rnd.nextInt(level + (rnd.nextInt(2)));
+		enemyCount = level + (rnd.nextInt(2));
+		enemy = new Enemy[enemyCount];
+		enemyPos = new int[enemyCount][2];
 		for (int i = 0; i < enemyCount; i++) {
 			enemy[i] = generateEnemy(level);
-			spawnEntityRandom(i);
+			tileMap = spawnEntityRandom(i);
 		}
 	}
 
@@ -70,6 +73,25 @@ public class GridMap {
 			return true;
 		}
 
+	}
+	
+	private Tile[][] spawnPlayer() {
+		Tile[][] newMap = tileMap;
+		boolean goodSpawn = false;
+		do {
+			int posOne, posTwo;
+			posOne = rnd.nextInt(xSize);
+			posTwo = rnd.nextInt(ySize);
+			if (newMap[posOne][posTwo] == Tile.FLOOR && isAdjacentClear(posOne, posTwo)) {
+				int[] newPosition = { posOne, posTwo };
+				playerPos = newPosition;
+				newMap[posOne][posTwo] = Tile.PLAYER;
+				goodSpawn = true;
+			}
+
+		} while (!goodSpawn);
+
+		return newMap;
 	}
 
 	private Tile[][] spawnEntityRandom(int enemyID) {
