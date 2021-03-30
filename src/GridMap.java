@@ -13,12 +13,13 @@ public class GridMap {
 	private int[][] enemyPos;
 
 	private int level;
+	Random rnd = new Random();
 
 	public GridMap(Actor Player, int level, int xSize, int ySize) {
 		viewMap = new String[xSize][ySize];
 		tileMap = generateBlankTileMap(xSize, ySize);
 		this.player = Player;
-		Random rnd = new Random();
+		
 		int enemyCount = rnd.nextInt(level + (rnd.nextInt(2)));
 		for(int i = 0; i < enemyCount; i++) {
 			enemy[i] = generateEnemy(level);
@@ -48,8 +49,11 @@ public class GridMap {
 	}
 	
 	private Enemy generateEnemy(int level) {
+		RandomNameGenerator RNG = new RandomNameGenerator();
 		
+		Enemy tempEnemy = new Enemy(RNG.getGruntName(), rnd.nextInt(level * 10), 10 + rnd.nextInt(level), DamageType.none, this.level, level*10+rnd.nextInt(5));
 		
-		return null;
+		return tempEnemy;
+		
 	}
 }
