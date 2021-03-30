@@ -15,7 +15,14 @@ public class Main {
 		Actor myPlayer;
 		myPlayer = generateStarterPlayer();
 		Enemy Player2 = new Enemy("Player 2", 10, 10, DamageType.none, 1, 100);
-		
+		GridMap map = new GridMap(myPlayer, 1, 10 , 10);
+		String[][] mapmap = map.generateViewMap();
+		for(int i = 0; i < mapmap.length; i++) {
+			for(int j = 0; j < mapmap[0].length; j++) {
+				System.out.print(mapmap[i][j] + " ");
+			}
+			System.out.println();
+		}
 		
 		
 		Weapon equippedItem2 = new Weapon("Sword2", 5, 30, DamageType.fire);
