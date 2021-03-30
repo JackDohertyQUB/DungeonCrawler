@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Random;
 
 public class GridMap {
@@ -29,13 +30,17 @@ public class GridMap {
 		tileMap = spawnPlayer();
 
 		enemyCount = level + (rnd.nextInt(2));
+		
 		enemy = new Enemy[enemyCount];
 		enemyPos = new int[enemyCount][2];
 		for (int i = 0; i < enemyCount; i++) {
 			enemy[i] = generateEnemy(level);
 			tileMap = spawnEntityRandom(i);
 		}
+		
 	}
+	
+	
 
 	private Tile[][] generateBlankTileMap(int xSize, int ySize) {
 		Tile[][] newMap = new Tile[xSize][ySize];
@@ -47,16 +52,25 @@ public class GridMap {
 		return newMap;
 	}
 
-	private Tile[][] moveEntity(int enemyID, int[] pos, int[] newPos) {
+	public Tile[][] moveEntity(int enemyID, int[] pos, int[] newPos) {
 		Tile[][] newMap = tileMap;
-		if (enemyID > 0 && enemyID < enemy.length && enemyID < enemyPos.length) {
+		System.out.println("Old position: " + Arrays.toString(enemyPos[enemyID]));
+		if (enemyID > -1 && enemyID < enemy.length) {
 			if (newMap[newPos[0]][newPos[1]] == Tile.FLOOR) {
 				newMap[newPos[0]][newPos[1]] = Tile.ENEMY;
+				newMap[pos[0]][pos[1]] = Tile.FLOOR;
 				enemyPos[enemyID] = newPos;
+				System.out.println("New position: " + Arrays.toString(enemyPos[enemyID]));
 			}
+		} else {
+			System.out.println("This aint working chief");
 		}
 		this.tileMap = newMap;
 		return newMap;
+	}
+	
+	public int[] getEnemyPos(int enemyID) {
+		return enemyPos[enemyID];
 	}
 
 	private boolean isAdjacentClear(int posOne, int posTwo) {
@@ -110,6 +124,20 @@ public class GridMap {
 			}
 
 		} while (!goodSpawn);
+
+		return newMap;
+
+	}
+	
+	private Tile[][] spawnEntityPos(int enemyID, int posOne, int posTwo) {
+		Tile[][] newMap = tileMap;
+			if (newMap[posOne][posTwo] == Tile.FLOOR && isAdjacentClear(posOne, posTwo)) {
+				int[] newPosition = { posOne, posTwo };
+				enemyCount++;
+				enemyPos[enemyID] = newPosition;
+				newMap[posOne][posTwo] = Tile.ENEMY;
+			}
+
 
 		return newMap;
 

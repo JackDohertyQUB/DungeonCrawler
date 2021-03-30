@@ -24,6 +24,17 @@ public class Main {
 			System.out.println();
 		}
 		
+		int[] array = map.getEnemyPos(0);
+		array[1] = array[1] + 1;
+		
+		map.moveEntity(0, map.getEnemyPos(0), array);
+		mapmap = map.generateViewMap();
+		for(int i = 0; i < mapmap.length; i++) {
+			for(int j = 0; j < mapmap[0].length; j++) {
+				System.out.print(mapmap[i][j] + " ");
+			}
+			System.out.println();
+		}
 		
 		Weapon equippedItem2 = new Weapon("Sword2", 5, 30, DamageType.fire);
 		System.out.println((Math.random() * 3));
