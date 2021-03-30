@@ -11,9 +11,9 @@ public class Main {
 	public static void main(String[] args) {
 		Scanner input = new Scanner(System.in);
 		
+		
 		Actor myPlayer;
 		myPlayer = generateStarterPlayer();
-		
 		Enemy Player2 = new Enemy("Player 2", 10, 10, DamageType.none, 1, 100);
 		
 		
