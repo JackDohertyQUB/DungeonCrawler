@@ -15,7 +15,7 @@ public class Main {
 		Actor myPlayer;
 		myPlayer = generateStarterPlayer();
 		Enemy Player2 = new Enemy("Player 2", 10, 10, DamageType.none, 1, 100);
-		GridMap map = new GridMap(myPlayer, 1, 10 , 10);
+		GridMap map = new GridMap(myPlayer, 1, 12 , 12);
 		String[][] mapmap = map.generateViewMap();
 		for(int i = 0; i < mapmap.length; i++) {
 			for(int j = 0; j < mapmap[0].length; j++) {
@@ -24,10 +24,7 @@ public class Main {
 			System.out.println();
 		}
 		
-		int[] array = map.getEnemyPos(0);
-		array[1] = array[1] + 1;
-		
-		map.moveEntity(0, map.getEnemyPos(0), array);
+		map.moveEntity(0, map.getEnemyPos(0), incrementPos(map.getEnemyPos(0), 0, -1));
 		mapmap = map.generateViewMap();
 		for(int i = 0; i < mapmap.length; i++) {
 			for(int j = 0; j < mapmap[0].length; j++) {
@@ -44,10 +41,17 @@ public class Main {
 		
 		battle(myPlayer, Player2);
 		
-		/*
-		  for(int i = 0; i<x ; i++) { for(int j = 0; j<y ; j++) { matrixScreen[i][j] =
-		  'x'; System.out.print(matrixScreen[i][j]); } System.out.println(); }
-		 */
+	}
+	
+	public static int[] incrementPos(int[] toChange, int xChange, int yChange) {
+		int[] newPos = new int[toChange.length];
+		for(int i = 0; i < newPos.length; i++) {
+			newPos[i] = toChange[i];
+		}
+		newPos[0] += xChange;
+		newPos[1] += yChange;
+		
+		return newPos;
 	}
 	
 	public static Actor generateStarterPlayer() {

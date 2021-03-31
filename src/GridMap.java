@@ -30,17 +30,15 @@ public class GridMap {
 		tileMap = spawnPlayer();
 
 		enemyCount = level + (rnd.nextInt(2));
-		
+
 		enemy = new Enemy[enemyCount];
 		enemyPos = new int[enemyCount][2];
 		for (int i = 0; i < enemyCount; i++) {
 			enemy[i] = generateEnemy(level);
 			tileMap = spawnEntityRandom(i);
 		}
-		
+
 	}
-	
-	
 
 	private Tile[][] generateBlankTileMap(int xSize, int ySize) {
 		Tile[][] newMap = new Tile[xSize][ySize];
@@ -52,29 +50,34 @@ public class GridMap {
 		return newMap;
 	}
 
-	public Tile[][] moveEntity(int enemyID, int[] pos, int[] newPos) {
+	public boolean moveEntity(int enemyID, int[] pos, int[] newPos) {
 		Tile[][] newMap = tileMap;
 		System.out.println("Old position: " + Arrays.toString(enemyPos[enemyID]));
 		if (enemyID > -1 && enemyID < enemy.length) {
+
 			if (newMap[newPos[0]][newPos[1]] == Tile.FLOOR) {
 				newMap[newPos[0]][newPos[1]] = Tile.ENEMY;
-				newMap[pos[0]][pos[1]] = Tile.FLOOR;
+				newMap[pos[0]][pos[1]] = Tile.WALL;
 				enemyPos[enemyID] = newPos;
 				System.out.println("New position: " + Arrays.toString(enemyPos[enemyID]));
+				tileMap = newMap;
+				return true;
+			} else {
+				return false;
 			}
+
 		} else {
 			System.out.println("This aint working chief");
+			return false;
 		}
-		this.tileMap = newMap;
-		return newMap;
+
 	}
-	
+
 	public int[] getEnemyPos(int enemyID) {
 		return enemyPos[enemyID];
 	}
 
 	private boolean isAdjacentClear(int posOne, int posTwo) {
-		Tile[][] newMap = tileMap;
 		if (tileMap[posOne + 1][posTwo] == Tile.ENEMY || tileMap[posOne - 1][posTwo] == Tile.ENEMY
 				|| tileMap[posOne][posTwo + 1] == Tile.ENEMY || tileMap[posOne][posTwo - 1] == Tile.ENEMY
 				|| tileMap[posOne + 1][posTwo + 1] == Tile.ENEMY || tileMap[posOne + 1][posTwo - 1] == Tile.ENEMY
@@ -89,7 +92,16 @@ public class GridMap {
 		}
 
 	}
-	
+
+	private boolean isAdjacentDirect(int posOne, int posTwo) {
+		if (tileMap[posOne + 1][posTwo] == Tile.ENEMY || tileMap[posOne - 1][posTwo] == Tile.ENEMY
+				|| tileMap[posOne][posTwo + 1] == Tile.ENEMY || tileMap[posOne][posTwo - 1] == Tile.ENEMY) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	private Tile[][] spawnPlayer() {
 		Tile[][] newMap = tileMap;
 		boolean goodSpawn = false;
@@ -128,16 +140,15 @@ public class GridMap {
 		return newMap;
 
 	}
-	
+
 	private Tile[][] spawnEntityPos(int enemyID, int posOne, int posTwo) {
 		Tile[][] newMap = tileMap;
-			if (newMap[posOne][posTwo] == Tile.FLOOR && isAdjacentClear(posOne, posTwo)) {
-				int[] newPosition = { posOne, posTwo };
-				enemyCount++;
-				enemyPos[enemyID] = newPosition;
-				newMap[posOne][posTwo] = Tile.ENEMY;
-			}
-
+		if (newMap[posOne][posTwo] == Tile.FLOOR && isAdjacentClear(posOne, posTwo)) {
+			int[] newPosition = { posOne, posTwo };
+			enemyCount++;
+			enemyPos[enemyID] = newPosition;
+			newMap[posOne][posTwo] = Tile.ENEMY;
+		}
 
 		return newMap;
 
