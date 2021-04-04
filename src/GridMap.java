@@ -40,6 +40,30 @@ public class GridMap {
 
 	}
 
+	// Getter/Setters
+
+	public Actor getPlayer() {
+		return this.player;
+	}
+	
+	public Enemy getEnemy(int id) {
+		return enemy[id];
+	}
+	
+	public Enemy[] getAllEnemy() {
+		return enemy;
+	}
+
+	public int[] getEnemyPos(int enemyID) {
+		return enemyPos[enemyID];
+	}
+
+	public int[] getPlayerPos() {
+		return playerPos;
+	}
+
+	// Map Generation
+
 	private Tile[][] generateBlankTileMap(int xSize, int ySize) {
 		Tile[][] newMap = new Tile[xSize][ySize];
 		for (int i = 0; i < xSize; i++) {
@@ -48,33 +72,6 @@ public class GridMap {
 			}
 		}
 		return newMap;
-	}
-
-	public boolean moveEntity(int enemyID, int[] pos, int[] newPos) {
-		Tile[][] newMap = tileMap;
-		System.out.println("Old position: " + Arrays.toString(enemyPos[enemyID]));
-		if (enemyID > -1 && enemyID < enemy.length) {
-
-			if (newMap[newPos[0]][newPos[1]] == Tile.FLOOR) {
-				newMap[newPos[0]][newPos[1]] = Tile.ENEMY;
-				newMap[pos[0]][pos[1]] = Tile.WALL;
-				enemyPos[enemyID] = newPos;
-				System.out.println("New position: " + Arrays.toString(enemyPos[enemyID]));
-				tileMap = newMap;
-				return true;
-			} else {
-				return false;
-			}
-
-		} else {
-			System.out.println("This aint working chief");
-			return false;
-		}
-
-	}
-
-	public int[] getEnemyPos(int enemyID) {
-		return enemyPos[enemyID];
 	}
 
 	private boolean isAdjacentClear(int posOne, int posTwo) {
@@ -100,6 +97,78 @@ public class GridMap {
 		} else {
 			return true;
 		}
+	}
+
+	private Tile[][] generateOuterWalls(Tile[][] tileMap) {
+		if (tileMap.length <= 2 || tileMap[0].length <= 2) {
+			return tileMap;
+		} else {
+			Tile[][] wallMap = tileMap;
+
+			for (int j = 0; j < wallMap.length; j++) {
+				for (int k = 0; k < wallMap[0].length; k++) {
+					if (k == 0 || k == wallMap[0].length - 1) {
+						wallMap[j][k] = Tile.WALL;
+					} else if (j == 0 || j == wallMap.length - 1) {
+						wallMap[j][k] = Tile.WALL;
+					}
+				}
+			}
+
+			return wallMap;
+		}
+	}
+
+	public String[][] generateViewMap() {
+		String[][] viewMap = new String[tileMap.length][tileMap[0].length];
+		for (int i = 0; i < tileMap.length; i++) {
+			for (int j = 0; j < tileMap[0].length; j++) {
+				viewMap[i][j] = tileMap[i][j].toString();
+			}
+		}
+		this.viewMap = viewMap;
+		return viewMap;
+	}
+
+	// Entity Manipulation
+
+	public boolean moveEntity(int enemyID, int[] pos, int[] newPos) {
+		Tile[][] newMap = tileMap;
+		System.out.println("Old position: " + Arrays.toString(enemyPos[enemyID]));
+		if (enemyID > -1 && enemyID < enemy.length) {
+
+			if (newMap[newPos[0]][newPos[1]] == Tile.FLOOR) {
+				newMap[newPos[0]][newPos[1]] = Tile.ENEMY;
+				newMap[pos[0]][pos[1]] = Tile.FLOOR;
+				enemyPos[enemyID] = newPos;
+				System.out.println("New position: " + Arrays.toString(enemyPos[enemyID]));
+				tileMap = newMap;
+				return true;
+			} else {
+				return false;
+			}
+
+		} else {
+			System.out.println("This aint working chief");
+			return false;
+		}
+
+	}
+
+	public boolean movePlayer(int[] pos, int[] newPos) {
+		Tile[][] newMap = tileMap;
+		System.out.println("Old Position: " + Arrays.toString(playerPos));
+		if (newMap[newPos[0]][newPos[1]] == Tile.FLOOR) {
+			newMap[newPos[0]][newPos[1]] = Tile.PLAYER;
+			newMap[pos[0]][pos[1]] = Tile.FLOOR;
+			playerPos = newPos;
+			System.out.println("New position: " + Arrays.toString(playerPos));
+			tileMap = newMap;
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 
 	private Tile[][] spawnPlayer() {
@@ -134,7 +203,6 @@ public class GridMap {
 				newMap[posOne][posTwo] = Tile.ENEMY;
 				goodSpawn = true;
 			}
-
 		} while (!goodSpawn);
 
 		return newMap;
@@ -149,47 +217,22 @@ public class GridMap {
 			enemyPos[enemyID] = newPosition;
 			newMap[posOne][posTwo] = Tile.ENEMY;
 		}
-
 		return newMap;
 
-	}
-
-	private Tile[][] generateOuterWalls(Tile[][] tileMap) {
-		if (tileMap.length <= 2 || tileMap[0].length <= 2) {
-			return tileMap;
-		} else {
-			Tile[][] wallMap = tileMap;
-
-			for (int j = 0; j < wallMap.length; j++) {
-				for (int k = 0; k < wallMap[0].length; k++) {
-					if (k == 0 || k == wallMap[0].length - 1) {
-						wallMap[j][k] = Tile.WALL;
-					} else if (j == 0 || j == wallMap.length - 1) {
-						wallMap[j][k] = Tile.WALL;
-					}
-				}
-			}
-
-			return wallMap;
-		}
-	}
-
-	public String[][] generateViewMap() {
-		String[][] viewMap = new String[tileMap.length][tileMap[0].length];
-		for (int i = 0; i < tileMap.length; i++) {
-			for (int j = 0; j < tileMap[0].length; j++) {
-				viewMap[i][j] = tileMap[i][j].toString();
-			}
-		}
-		this.viewMap = viewMap;
-		return viewMap;
 	}
 
 	private Enemy generateEnemy(int level) {
 		Enemy tempEnemy = new Enemy(RNG.getGruntName(), rnd.nextInt(level * 10), 10 + rnd.nextInt(level),
 				DamageType.none, this.level, level * 10 + rnd.nextInt(5));
-
 		return tempEnemy;
 
+	}
+	
+	public Enemy enemyAdjacent() {
+		if(isAdjacentDirect(playerPos[0],playerPos[1])) {
+			if(tileMap[playerPos[0]+1][playerPos[1]] == Tile.ENEMY) {
+				
+			}
+		}
 	}
 }
