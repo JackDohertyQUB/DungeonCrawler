@@ -19,10 +19,13 @@ public class Main {
 		GridMap map = new GridMap(myPlayer, 1, 12, 12);
 		String[][] mapmap = printMap(map);
 		
-
-		map.moveEntity(0, map.getEnemyPos(0), incrementPos(map.getEnemyPos(0), 0, -1));
-		mapmap = printMap(map);
-
+		boolean thing = false;
+		do {
+			System.out.println("Which direction do you want to move?");
+			String choice = input.nextLine();
+			processOption(choice, map);
+			printMap(map);
+		} while (!thing);
 		Weapon equippedItem2 = new Weapon("Sword2", 5, 30, DamageType.fire);
 		System.out.println((Math.random() * 3));
 
@@ -125,17 +128,22 @@ public class Main {
 	}
 	
 	public static void processOption(String choice, GridMap map) {
-		switch(choice) {
-		case "left": movePlayerLeft(map); break;
-		case "right": movePlayerRight(map); break;
-		case "up": movePlayerUp(map); break;
-		case "down": movePlayerDown(map); break;
-		default: System.out.println("Invalid choice");
-		
-		
-		
-		
-		
+		if(choice.equalsIgnoreCase("left")) {
+			movePlayerLeft(map);
+		} else if(choice.equalsIgnoreCase("right")) {
+			movePlayerRight(map);
+		} else if(choice.equalsIgnoreCase("up")) {
+			movePlayerUp(map);
+		} else if(choice.equalsIgnoreCase("down")) {
+			movePlayerDown(map);
+		} else if(choice.equalsIgnoreCase("battle")) {
+			int[] playerPos = map.getPlayerPos();
+			if(map.isAdjacentDirect(playerPos[0], playerPos[1])) {
+				System.out.println("Ayo the pizza here");
+				battle(map.getPlayer(), map.enemyAdjacent());
+			}
+		} else {
+			System.out.println("Please enter a direction!");
 		}
 	}
 

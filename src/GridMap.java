@@ -74,7 +74,7 @@ public class GridMap {
 		return newMap;
 	}
 
-	private boolean isAdjacentClear(int posOne, int posTwo) {
+	public boolean isAdjacentClear(int posOne, int posTwo) {
 		if (tileMap[posOne + 1][posTwo] == Tile.ENEMY || tileMap[posOne - 1][posTwo] == Tile.ENEMY
 				|| tileMap[posOne][posTwo + 1] == Tile.ENEMY || tileMap[posOne][posTwo - 1] == Tile.ENEMY
 				|| tileMap[posOne + 1][posTwo + 1] == Tile.ENEMY || tileMap[posOne + 1][posTwo - 1] == Tile.ENEMY
@@ -90,7 +90,7 @@ public class GridMap {
 
 	}
 
-	private boolean isAdjacentDirect(int posOne, int posTwo) {
+	public boolean isAdjacentDirect(int posOne, int posTwo) {
 		if (tileMap[posOne + 1][posTwo] == Tile.ENEMY || tileMap[posOne - 1][posTwo] == Tile.ENEMY
 				|| tileMap[posOne][posTwo + 1] == Tile.ENEMY || tileMap[posOne][posTwo - 1] == Tile.ENEMY) {
 			return false;
