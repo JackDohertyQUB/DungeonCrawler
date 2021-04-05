@@ -45,11 +45,11 @@ public class GridMap {
 	public Actor getPlayer() {
 		return this.player;
 	}
-	
+
 	public Enemy getEnemy(int id) {
 		return enemy[id];
 	}
-	
+
 	public Enemy[] getAllEnemy() {
 		return enemy;
 	}
@@ -227,12 +227,56 @@ public class GridMap {
 		return tempEnemy;
 
 	}
-	
+
 	public Enemy enemyAdjacent() {
-		if(isAdjacentDirect(playerPos[0],playerPos[1])) {
-			if(tileMap[playerPos[0]+1][playerPos[1]] == Tile.ENEMY) {
-				
+		if (isAdjacentDirect(playerPos[0], playerPos[1])) {
+			if (tileMap[playerPos[0] + 1][playerPos[1]] == Tile.ENEMY) {
+				int[] enemyCheck = { playerPos[0] + 1, playerPos[1] };
+				int enemyID;
+				for (int i = 0; i < enemy.length; i++) {
+					if (enemyPos[i] == enemyCheck) {
+						enemyID = i;
+						return enemy[i];
+
+					}
+				}
+
+			} else if (tileMap[playerPos[0] - 1][playerPos[1]] == Tile.ENEMY) {
+				int[] enemyCheck = { playerPos[0] - 1, playerPos[1] };
+				int enemyID;
+				for (int i = 0; i < enemy.length; i++) {
+					if (enemyPos[i] == enemyCheck) {
+						enemyID = i;
+						return enemy[i];
+
+					}
+				}
+
+			} else if (tileMap[playerPos[0]][playerPos[1] + 1] == Tile.ENEMY) {
+				int[] enemyCheck = { playerPos[0] , playerPos[1] + 1 };
+				int enemyID;
+				for (int i = 0; i < enemy.length; i++) {
+					if (enemyPos[i] == enemyCheck) {
+						enemyID = i;
+						return enemy[i];
+
+					}
+				}
+
+			}  else if (tileMap[playerPos[0]][playerPos[1] - 1] == Tile.ENEMY) {
+				int[] enemyCheck = { playerPos[0] , playerPos[1] - 1 };
+				int enemyID;
+				for (int i = 0; i < enemy.length; i++) {
+					if (enemyPos[i] == enemyCheck) {
+						enemyID = i;
+						return enemy[i];
+
+					}
+				}
+
 			}
+			
 		}
+		return null;
 	}
 }
