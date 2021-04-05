@@ -39,6 +39,19 @@ public class GridMap {
 		}
 
 	}
+	
+	// TICK
+	
+	public void tick() {
+		Tile[][] newMap = tileMap;
+		for(int i = 0; i < enemy.length; i++) {
+			if(enemy[i].getAlive() == false) {
+				newMap[enemyPos[i][0]][enemyPos[i][1]] = Tile.FLOOR;
+			}
+		}
+		
+		this.tileMap = newMap;
+	}
 
 	// Getter/Setters
 
@@ -93,9 +106,9 @@ public class GridMap {
 	public boolean isAdjacentDirect(int posOne, int posTwo) {
 		if (tileMap[posOne + 1][posTwo] == Tile.ENEMY || tileMap[posOne - 1][posTwo] == Tile.ENEMY
 				|| tileMap[posOne][posTwo + 1] == Tile.ENEMY || tileMap[posOne][posTwo - 1] == Tile.ENEMY) {
-			return false;
-		} else {
 			return true;
+		} else {
+			return false;
 		}
 	}
 

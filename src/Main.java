@@ -25,6 +25,7 @@ public class Main {
 			String choice = input.nextLine();
 			processOption(choice, map);
 			printMap(map);
+			System.out.println(map.isAdjacentDirect(map.getPlayerPos()[0], map.getPlayerPos()[1]));
 		} while (!thing);
 		Weapon equippedItem2 = new Weapon("Sword2", 5, 30, DamageType.fire);
 		System.out.println((Math.random() * 3));
@@ -139,8 +140,8 @@ public class Main {
 		} else if(choice.equalsIgnoreCase("battle")) {
 			int[] playerPos = map.getPlayerPos();
 			if(map.isAdjacentDirect(playerPos[0], playerPos[1])) {
-				System.out.println("Ayo the pizza here");
 				battle(map.getPlayer(), map.enemyAdjacent());
+				map.tick();
 			}
 		} else {
 			System.out.println("Please enter a direction!");
