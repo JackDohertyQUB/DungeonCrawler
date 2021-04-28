@@ -47,13 +47,10 @@ public class GridMap {
 			for(int j = 0; j < tileMap[i].length;j++) {
 				if(tileMap[i][j] == Tile.ENEMY) {
 					Enemy enemyAtPos = this.findAtPos(i, j);
-					System.out.println("Ayo what the cat doin");
 					if(enemyAtPos.getAlive() == false) {
 						newMap[i][j] = Tile.FLOOR;
-						System.out.println("Ayo what the dog doin");
 						this.removeEnemy(this.findAtPosInt(i, j));
 					} else {
-						System.out.println("Ayo what the hamster doin");
 					}
 				}
 			}
