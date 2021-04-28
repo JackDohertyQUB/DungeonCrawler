@@ -23,9 +23,7 @@ public class Main {
 			String choice = input.nextLine();
 			processOption(choice, map);
 			map.tick();
-			System.out.println(map.allEntityDetails());
 			printMap(map);
-			//System.out.println(map.printAllTiles());
 		} while (!thing);
 
 
