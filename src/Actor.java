@@ -50,7 +50,8 @@ public class Actor {
 		
 	//Methods
 	//Combat Methods
-	public void attackEntity(Actor target) {
+	public String attackEntity(Actor target) {
+		String details = "";
 		int targAC = target.armourState(target.getArmour());
 		int weaponATK = weaponAttack();
 		boolean crit = critCheck(weaponATK);
@@ -62,14 +63,14 @@ public class Actor {
 				int targHP = target.getCurrentHealth();
 				if(critCheck(weaponATK)) {
 					weaponDMG += weaponDamage();
-					System.out.println("Critical Hit!");
+					details += "Critical Hit!";
 				}
 				if(target.getGuardState() == true) {
 					weaponDMG = weaponDMG / 2;
 					target.setGuard(false);
 				}
 				target.setCurrentHealth(targHP-weaponDMG);
-				System.out.println("Target took " + weaponDMG + " damage! The target was weak to the attack!");
+				details += "Target took " + weaponDMG + " damage! The target was weak to the attack!";
 			} else {
 				int weaponDMG = weaponDamage();
 				int targHP = target.getCurrentHealth();
@@ -82,17 +83,18 @@ public class Actor {
 					target.setGuard(false);
 				}
 				target.setCurrentHealth(targHP-weaponDMG);
-				System.out.println("Target took " + weaponDMG + " damage!");
+				details += "Target took " + weaponDMG + " damage!";
 			}
 			
 		} else {
-			System.out.println("Attack Missed!");
+			details += "Attack Missed!";
 		}
+		return details;
 	}
 	
-	public void guard() {
+	public String guard() {
 		guardState = true;
-		System.out.println(name + " guards!");
+		return "name" + " guards!";
 	}
 	
 	
@@ -113,7 +115,7 @@ public class Actor {
 	}
 	public boolean lifeCheck() { // Checks if health is equal to or below 0
 		if(currentHealth <= 0) {
-			System.out.println(name + " is defeated!");
+			this.setAlive(false);
 			return false;
 		} else {
 			return true;

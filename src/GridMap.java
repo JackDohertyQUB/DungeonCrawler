@@ -41,12 +41,21 @@ public class GridMap {
 	}
 	
 	// TICK
-	
 	public void tick() {
 		Tile[][] newMap = tileMap;
-		for(int i = 0; i < enemy.length; i++) {
-			if(enemy[i].getAlive() == false) {
-				newMap[enemyPos[i][0]][enemyPos[i][1]] = Tile.FLOOR;
+		for(int i = 0; i < tileMap.length;i++) {
+			for(int j = 0; j < tileMap[i].length;j++) {
+				if(tileMap[i][j] == Tile.ENEMY) {
+					Enemy enemyAtPos = this.findAtPos(i, j);
+					System.out.println("Ayo what the cat doin");
+					if(enemyAtPos.getAlive() == false) {
+						newMap[i][j] = Tile.FLOOR;
+						System.out.println("Ayo what the dog doin");
+						this.removeEnemy(this.findAtPosInt(i, j));
+					} else {
+						System.out.println("Ayo what the hamster doin");
+					}
+				}
 			}
 		}
 		
@@ -147,14 +156,14 @@ public class GridMap {
 
 	public boolean moveEntity(int enemyID, int[] pos, int[] newPos) {
 		Tile[][] newMap = tileMap;
-		System.out.println("Old position: " + Arrays.toString(enemyPos[enemyID]));
+		//System.out.println("Old position: " + Arrays.toString(enemyPos[enemyID]));
 		if (enemyID > -1 && enemyID < enemy.length) {
 
 			if (newMap[newPos[0]][newPos[1]] == Tile.FLOOR) {
 				newMap[newPos[0]][newPos[1]] = Tile.ENEMY;
 				newMap[pos[0]][pos[1]] = Tile.FLOOR;
 				enemyPos[enemyID] = newPos;
-				System.out.println("New position: " + Arrays.toString(enemyPos[enemyID]));
+				//System.out.println("New position: " + Arrays.toString(enemyPos[enemyID]));
 				tileMap = newMap;
 				return true;
 			} else {
@@ -170,12 +179,12 @@ public class GridMap {
 
 	public boolean movePlayer(int[] pos, int[] newPos) {
 		Tile[][] newMap = tileMap;
-		System.out.println("Old Position: " + Arrays.toString(playerPos));
+		//System.out.println("Old Position: " + Arrays.toString(playerPos));
 		if (newMap[newPos[0]][newPos[1]] == Tile.FLOOR) {
 			newMap[newPos[0]][newPos[1]] = Tile.PLAYER;
 			newMap[pos[0]][pos[1]] = Tile.FLOOR;
 			playerPos = newPos;
-			System.out.println("New position: " + Arrays.toString(playerPos));
+			//System.out.println("New position: " + Arrays.toString(playerPos));
 			tileMap = newMap;
 			return true;
 		} else {
@@ -201,6 +210,37 @@ public class GridMap {
 		} while (!goodSpawn);
 
 		return newMap;
+	}
+	
+	public Enemy findAtPos(int x, int y) {
+		int[] posSearch = {x,y};
+		for(int i = 0; i < enemy.length; i++) {
+			if(enemyPos[i][0] == posSearch[0] && enemyPos[i][1] == posSearch[1]) {
+				return enemy[i];
+			}
+		}		
+		return null;
+	}
+	
+	public int findAtPosInt(int x, int y) {
+		int[] posSearch = {x,y};
+		for(int i = 0; i < enemy.length; i++) {
+			if(enemyPos[i][0] == posSearch[0] && enemyPos[i][1] == posSearch[1]) {
+				return i;
+			}
+		}		
+		return 99999;
+	}
+	
+	public String allEntityPos() {
+		String details = "";
+		for(int i = 0; i < enemyPos.length;i++) {
+			details+= Arrays.toString(enemyPos[i]) + "\n";
+		}
+		
+		
+		return details;
+		
 	}
 
 	private Tile[][] spawnEntityRandom(int enemyID) {
@@ -237,8 +277,33 @@ public class GridMap {
 	private Enemy generateEnemy(int level) {
 		Enemy tempEnemy = new Enemy(RNG.getGruntName(), rnd.nextInt(level * 10), 10 + rnd.nextInt(level),
 				DamageType.none, this.level, level * 10 + rnd.nextInt(5));
+		
+		Weapon equippedItem = new Weapon("Sword", 4, 20, DamageType.piercing);
+		tempEnemy.setWeapon(equippedItem);
 		return tempEnemy;
 
+	}
+	
+	private void removeEnemy(int pos) {
+		Enemy[] tempEnemy = new Enemy[enemy.length];
+		int[][] tempEnemyPos = new int[enemyPos.length][];
+		int i;
+		int j = 0;
+		for(i = 0;i<enemy.length;i++) {
+			if(i != pos) {
+				tempEnemy[j] = enemy[i];
+				tempEnemyPos[j] = enemyPos[i];
+				j++;
+			}
+		}
+		tempEnemy[tempEnemy.length - 1] = null;
+		enemy = tempEnemy;
+		tempEnemyPos[tempEnemy.length - 1] = null;
+		enemyPos = tempEnemyPos;
+		enemyCount--;
+		
+		
+		
 	}
 
 	public Enemy enemyAdjacent() {
@@ -246,21 +311,23 @@ public class GridMap {
 			if (tileMap[playerPos[0] + 1][playerPos[1]] == Tile.ENEMY) {
 				int[] enemyCheck = { playerPos[0] + 1, playerPos[1] };
 				int enemyID;
+				int j = 0;
 				for (int i = 0; i < enemy.length; i++) {
-					if (enemyPos[i] == enemyCheck) {
+					if (enemyPos[i][0] == enemyCheck[0] && enemyPos[i][1] == enemyCheck[1]) {
 						enemyID = i;
 						return enemy[i];
-
+						
 					}
+					j++;
 				}
 
 			} else if (tileMap[playerPos[0] - 1][playerPos[1]] == Tile.ENEMY) {
 				int[] enemyCheck = { playerPos[0] - 1, playerPos[1] };
 				int enemyID;
 				for (int i = 0; i < enemy.length; i++) {
-					if (enemyPos[i] == enemyCheck) {
+					if (enemyPos[i][0] == enemyCheck[0] && enemyPos[i][1] == enemyCheck[1]) {
 						enemyID = i;
-						return enemy[i];
+						return enemy[enemyID];
 
 					}
 				}
@@ -269,7 +336,7 @@ public class GridMap {
 				int[] enemyCheck = { playerPos[0] , playerPos[1] + 1 };
 				int enemyID;
 				for (int i = 0; i < enemy.length; i++) {
-					if (enemyPos[i] == enemyCheck) {
+					if (enemyPos[i][0] == enemyCheck[0] && enemyPos[i][1] == enemyCheck[1]) {
 						enemyID = i;
 						return enemy[i];
 
@@ -280,7 +347,7 @@ public class GridMap {
 				int[] enemyCheck = { playerPos[0] , playerPos[1] - 1 };
 				int enemyID;
 				for (int i = 0; i < enemy.length; i++) {
-					if (enemyPos[i] == enemyCheck) {
+					if (enemyPos[i][0] == enemyCheck[0] && enemyPos[i][1] == enemyCheck[1]) {
 						enemyID = i;
 						return enemy[i];
 
@@ -292,4 +359,34 @@ public class GridMap {
 		}
 		return null;
 	}
+	
+	//DEBUG TOOLS
+	
+	public String printAllTiles() {
+		String details = "";
+		for(int i = 0; i < tileMap.length;i++) {
+			for(int j = 0; j < tileMap[i].length;j++) {
+				details += "Tile " + i + "," + j + " = " + tileMap[i][j].toString() + "\n" ;
+			}
+		}
+		return details;
+	}
+	
+	public String allEntityDetails() {
+		String details = "";
+		for(int i = 0; i < enemy.length; i++) {
+			if(enemy[i] != null) {
+				details += "\nEnemy ID: " + i;
+				details += "\nEnemy Name: " + enemy[i].getName();
+				details += "\nEnemy Health: " + enemy[i].getMaxHealth();
+				details += "\nEnemy Current Health: " + enemy[i].getCurrentHealth();
+				details += "\nEnemy Current Position: " + Arrays.toString(enemyPos[i]) + "\n";
+			}	
+		}
+		
+		return details;
+	}
+	
+	
+	
 }

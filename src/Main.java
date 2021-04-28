@@ -15,24 +15,20 @@ public class Main {
 
 		Actor myPlayer;
 		myPlayer = generateStarterPlayer();
-		Enemy Player2 = new Enemy("Player 2", 10, 10, DamageType.none, 1, 100);
 		GridMap map = new GridMap(myPlayer, 1, 12, 12);
 		String[][] mapmap = printMap(map);
-		
 		boolean thing = false;
 		do {
 			System.out.println("Which direction do you want to move?");
 			String choice = input.nextLine();
 			processOption(choice, map);
+			map.tick();
+			System.out.println(map.allEntityDetails());
 			printMap(map);
-			System.out.println(map.isAdjacentDirect(map.getPlayerPos()[0], map.getPlayerPos()[1]));
+			//System.out.println(map.printAllTiles());
 		} while (!thing);
-		Weapon equippedItem2 = new Weapon("Sword2", 5, 30, DamageType.fire);
-		System.out.println((Math.random() * 3));
 
-		Player2.setWeapon(equippedItem2);
 
-		System.out.println(battle(myPlayer, Player2));
 
 	}
 
@@ -80,11 +76,11 @@ public class Main {
 							+ "\n 4>Use Item" + "\n 5>Swap Weapon");
 					String answer = input.next();
 					if (answer.equalsIgnoreCase("Attack") || answer.equalsIgnoreCase("1")) {
-						currentTurn.attackEntity(opponent);
+						System.out.println(currentTurn.attackEntity(opponent));
 						i++;
 						System.out.println();
 					} else if (answer.equalsIgnoreCase("Guard") || answer.equalsIgnoreCase("2")) {
-						currentTurn.guard();
+						System.out.println(currentTurn.guard());
 						i++;
 					} else if (answer.equalsIgnoreCase("Check") || answer.equalsIgnoreCase("3")) {
 						System.out.println("Which enemy stat will you check? " + "\n 1>Health " + "\n 2>Weakness"
@@ -106,24 +102,23 @@ public class Main {
 					}
 
 				} else if (playerTurn == false) {
-					opponent.attackEntity(currentTurn);
+					System.out.println(opponent.attackEntity(currentTurn));
 					i++;
 					System.out.println();
 				}
-
+				opponent.lifeCheck();
 				playerTurn = !playerTurn;
 			} while (currentTurn.lifeCheck() == true && opponent.lifeCheck() == true);
 			if(playerOne.getAlive() == true) {
 				System.out.println("Combat Over! \n");
+				System.out.println(opponent.getName() + "is defeated!");
 				playerOne.addEXP(playerTwo.getExpDrop());
 				playerOne.expCheck();
 				return true;
 			} else {
-				System.out.println("Combat Over! \n");
+				System.out.println("Combat Over! \nYou lose!");
 				return false;
 			}
-			
-			
 		} while (combat);
 
 	}
@@ -141,7 +136,7 @@ public class Main {
 			int[] playerPos = map.getPlayerPos();
 			if(map.isAdjacentDirect(playerPos[0], playerPos[1])) {
 				battle(map.getPlayer(), map.enemyAdjacent());
-				map.tick();
+				System.out.println(map.enemyAdjacent().getAlive());
 			}
 		} else {
 			System.out.println("Please enter a direction!");
