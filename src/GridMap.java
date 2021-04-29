@@ -21,14 +21,16 @@ public class GridMap {
 	Random rnd = new Random();
 	RandomNameGenerator RNG = new RandomNameGenerator();
 
-	public GridMap(Actor Player, int level, int xSize, int ySize) {
+	public GridMap(Actor Player, int level, int xSize, int ySize, boolean corners) {
 		viewMap = new String[xSize][ySize];
 		this.xSize = xSize;
 		this.ySize = ySize;
 		tileMap = generateOuterWalls(generateBlankTileMap(xSize, ySize));
 		this.player = Player;
 		tileMap = spawnPlayer();
-
+		if(corners) {
+			generateCorner();
+		}		
 		enemyCount = level + (rnd.nextInt(2));
 
 		enemy = new Enemy[enemyCount];
@@ -43,6 +45,8 @@ public class GridMap {
 	// TICK
 	public void tick() {
 		Tile[][] newMap = tileMap;
+		
+		//Checks for dead enemies and deletes them
 		for(int i = 0; i < tileMap.length;i++) {
 			for(int j = 0; j < tileMap[i].length;j++) {
 				if(tileMap[i][j] == Tile.ENEMY) {
@@ -148,6 +152,34 @@ public class GridMap {
 		this.viewMap = viewMap;
 		return viewMap;
 	}
+	
+	public void generateFullCircle(int size, int x, int y) {
+		int currentSize = 0;
+		for(int i = 0; i < size;i++) {
+			tileMap[x][y + i] = Tile.WALL;
+			tileMap[x][y - i] = Tile.WALL;
+			tileMap[x + i][y] = Tile.WALL;
+			tileMap[x - i][y] = Tile.WALL;
+			if(size > 2) {				
+				do {
+					tileMap[x + i][y + i] = Tile.WALL;
+					tileMap[x - i][y - i] = Tile.WALL;
+					tileMap[x + i][y - i] = Tile.WALL;
+					tileMap[x - i][y + i] = Tile.WALL;
+					currentSize++;
+				} while (currentSize < size);
+				
+			}
+		}
+	}
+	
+	private void generateCorner() {
+		generateFullCircle(2, 1, 1);
+		generateFullCircle(2, (tileMap.length - 1) - 1, 1);
+		generateFullCircle(2, 1, (tileMap[0].length - 1) - 1);
+		generateFullCircle(2, tileMap.length - 2, tileMap[0].length - 2);
+		
+	}
 
 	// Entity Manipulation
 
@@ -233,11 +265,8 @@ public class GridMap {
 		String details = "";
 		for(int i = 0; i < enemyPos.length;i++) {
 			details+= Arrays.toString(enemyPos[i]) + "\n";
-		}
-		
-		
-		return details;
-		
+		}		
+		return details;		
 	}
 
 	private Tile[][] spawnEntityRandom(int enemyID) {
@@ -357,8 +386,7 @@ public class GridMap {
 		return null;
 	}
 	
-	//DEBUG TOOLS
-	
+	//DEBUG TOOLS	
 	public String printAllTiles() {
 		String details = "";
 		for(int i = 0; i < tileMap.length;i++) {
@@ -383,6 +411,9 @@ public class GridMap {
 		
 		return details;
 	}
+	
+	
+	
 	
 	
 	

@@ -15,7 +15,7 @@ public class Main {
 
 		Actor myPlayer;
 		myPlayer = generateStarterPlayer();
-		GridMap map = new GridMap(myPlayer, 1, 12, 12);
+		GridMap map = new GridMap(myPlayer, 1, 16, 13, true);
 		String[][] mapmap = printMap(map);
 		boolean thing = false;
 		do {
@@ -54,7 +54,7 @@ public class Main {
 
 	public static Actor generateStarterPlayer() {
 		Actor myPlayer = new Actor("Player 1", 10, 10, DamageType.none, 1);
-		Weapon equippedItem = new Weapon("Sword", 5, 30, DamageType.piercing);
+		Weapon equippedItem = new Weapon("Sword", 200, 30, DamageType.piercing);
 		myPlayer.setWeapon(equippedItem);
 		return myPlayer;
 	}
